@@ -9,8 +9,6 @@ import './quill.mention.scss'
 import { KeyboardType } from './shared/constants'
 import './blots/mention'
 
-
-
 const defaultOptions: MentionOptions = {
 	targetChars: ['@'],
 	source: () => [],

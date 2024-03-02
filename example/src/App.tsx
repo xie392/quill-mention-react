@@ -1,9 +1,13 @@
 import { useEffect, useRef } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.core.css'
-import '../../src/quill.mention'
+// import '../../src/quill.mention'
 import { Data } from 'src/type'
 import './App.scss'
+import Mention from 'quill-mention-react'
+import 'quill-mention-react/dist/style.css'
+
+Quill.register({ 'modules/mention': Mention })
 
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },

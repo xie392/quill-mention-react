@@ -13,22 +13,28 @@ npm install quill-mention-react --save
 # or
 yarn add quill-mention-react
 # or
-pnpm add quill-mention
+pnpm add quill-mention-react
 ```
 
 ## 导入
 
 ```shell
-import "quill-mention-react"
+import Mention from 'quill-mention-react'
+import 'quill-mention-react/dist/style.css'
+
+Quill.register({ 'modules/mention': Mention })
 ```
 
 # 例子
 
 ```tsx
-import 'quill-mention-react'
 import { useEffect, useRef } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.core.css'
+import Mention from 'quill-mention-react'
+import 'quill-mention-react/dist/style.css'
+
+Quill.register({ 'modules/mention': Mention })
 
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },

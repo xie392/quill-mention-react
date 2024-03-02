@@ -44,7 +44,8 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "clsx": "^2.1.0"
+    "clsx": "^2.1.0",
+    "quill-mention-react": "^0.0.3"
   },
   "repository": "https://github.com/xie392/quill-mention-react.git",
   "author": "xie392 <ymzdjiang@qq.com>",
