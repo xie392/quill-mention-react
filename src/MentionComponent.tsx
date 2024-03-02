@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Data } from './type'
+import  { Data } from './type'
 import clsx from 'clsx'
 
 interface MentionProps {

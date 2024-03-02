@@ -1,5 +1,5 @@
 import Quill from 'quill'
-import type { Data, MentionOptions } from './type'
+import  { Data, MentionOptions } from './type'
 import { Delta } from 'quill/core'
 import { isAsyncFunction } from './shared/utils'
 import { Root, createRoot } from 'react-dom/client'
@@ -8,6 +8,8 @@ import MentionComponent from './MentionComponent'
 import './quill.mention.scss'
 import { KeyboardType } from './shared/constants'
 import './blots/mention'
+
+
 
 const defaultOptions: MentionOptions = {
 	targetChars: ['@'],

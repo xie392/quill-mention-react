@@ -1,12 +1,14 @@
 {
   "name": "quill-mention-react",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.0.1",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "dev": "vite",
@@ -43,5 +45,19 @@
   },
   "dependencies": {
     "clsx": "^2.1.0"
+  },
+  "repository": "https://github.com/xie392/quill-mention-react.git",
+  "author": "xie392 <ymzdjiang@qq.com>",
+  "license": "MIT",
+  "homepage": "https://quill-mention.com/",
+  "keywords": [
+    "quill",
+    "mentions",
+    "autocomplete",
+    "mention"
+  ],
+  "description": "Quill React Mention",
+  "publishConfig": {
+    "access": "public"
   }
 }

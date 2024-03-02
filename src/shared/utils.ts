@@ -1,4 +1,4 @@
-import type { Data } from 'src/type'
+import { Data } from '../type'
 
 /**
  * 判断函数是否为 异步函数

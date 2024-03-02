@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-	plugins: [react(), dts({ insertTypesEntry: true, include: ['src/quill.mention.ts'] })],
 	build: {
 		lib: {
 			entry: fileURLToPath(new URL('./src/quill.mention.ts', import.meta.url)),
@@ -12,5 +11,6 @@ export default defineConfig({
 			formats: ['es'],
 			fileName: 'index'
 		}
-	}
+	},
+	plugins: [react(), dts({ insertTypesEntry: true, exclude: ['example'] })]
 })

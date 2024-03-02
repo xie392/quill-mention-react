@@ -31,13 +31,8 @@ export interface MentionOptions {
 	 */
 	onSelect?: (data: Data) => void
 	/**
-	 * 自定义样式
-	 *
-	 * @default { color: '#0c70f5' }
-	 */
-	style?: { [key: string]: string }
-	/**
 	 * 自定义渲染的元素
 	 */
 	item?: (data:Data) => React.ReactNode
 }
+
