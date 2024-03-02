@@ -49,7 +49,7 @@
   "repository": "https://github.com/xie392/quill-mention-react.git",
   "author": "xie392 <ymzdjiang@qq.com>",
   "license": "MIT",
-  "homepage": "https://quill-mention.com/",
+  "homepage": "https://quill-mention-react.vercel.app/",
   "keywords": [
     "quill",
     "mentions",
