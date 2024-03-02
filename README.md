@@ -1,8 +1,6 @@
-<!-- ![Quill Mention](docs/static/quill-mention.png "Quill Mention") -->
+![Quill Mention](./accets/ico.svg 'Quill Mention')
 
-# Quill Mention
+# Quill Mention React
 
-<!-- [![npm version](https://badge.fury.io/js/quill-mention.svg)](https://badge.fury.io/js/quill-mention)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) -->
+Quill Mention React 是一个为 [Quill](https://quilljs.com/) 富文本编辑器提供提及功能的插件。本插件参考来自 [Quill Mention](https://github.com/quill-mention/quill-mention/tree/master)。
 
-Quill Mention is a module to provide @mentions or #hashtag functionality for the [Quill](https://quilljs.com/) rich text editor.

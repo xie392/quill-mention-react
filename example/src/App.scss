@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ql-editor.ql-blank::before {
+    font-style: normal;
+}

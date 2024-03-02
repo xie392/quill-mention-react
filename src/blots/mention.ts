@@ -1,34 +1,35 @@
 import Quill from 'quill'
 import QuillEmbed from 'quill/blots/embed'
-import ScrollBlot from 'quill/blots/scroll'
+import { Data } from '../type'
 
 const Embed = Quill.import('blots/embed') as QuillEmbed
 
 // @ts-ignore
 class MentionBlot extends Embed {
 	public static blotName = 'mention'
-	public static className = 'quill-mention'
+	public static className = 'ql-mention-denotation-char'
 	public static tagName = 'span'
 
-	static create(data: { name: string }) {
+	/**
+	 * 使用给定数据创建一个新节点。
+	 *
+	 * @param {Data} data -创建节点的数据
+	 */
+	static create(data: Data) {
 		const node = super.create(data.name)
 		node.nodeData = data
 		node.innerHTML = data.name
-		node.setAttribute('spellcheck', 'false')
-		node.setAttribute('autocomplete', 'off')
-		node.setAttribute('autocorrect', 'off')
-		node.setAttribute('autocapitalize', 'off')
-		node.setAttribute('class', 'ql-mention-denotation')
-		node.setAttribute('contentEditable', 'false')
+		node.style.color = data.color || '#0c70f5'
 		return node
 	}
 
-	static value(domNode: any) {
+	/**
+	 * 整个功能的描述。
+	 *
+	 * @param {Data} domNode -参数描述
+	 */
+	static value(domNode: Data) {
 		return domNode.nodeData
-	}
-
-	constructor(scroll: ScrollBlot, node: Node) {
-		super(scroll, node)
 	}
 }
 

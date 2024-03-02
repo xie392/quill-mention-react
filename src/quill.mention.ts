@@ -1,246 +1,203 @@
 import Quill from 'quill'
+import type { Data, MentionOptions } from './type'
 import { Delta } from 'quill/core'
-import './quill.mention.scss'
-import MentionComponent from './MentionComponent'
+import { isAsyncFunction } from './shared/utils'
 import { Root, createRoot } from 'react-dom/client'
 import { createElement } from 'react'
-import { Data } from './type'
+import MentionComponent from './MentionComponent'
+import './quill.mention.scss'
+import { KeyboardType } from './shared/constants'
 import './blots/mention'
 
-interface MentionOptions {
-	triggerChar?: string[]
-	source?: () => Promise<Data[]>
-	visable?: boolean
-	render?: (data?: Data[]) => React.ReactNode
-	loading?: boolean
-	onSelect?: (data: Data | number) => void
+const defaultOptions: MentionOptions = {
+	targetChars: ['@'],
+	source: () => [],
+	onSelect: () => {}
 }
 
-const defaultOptions = {
-	triggerChar: ['@'],
-	visable: true,
-	loading: true,
-	onSelect: () => null
-}
-
-/**
- * @description 自定义提及
- *
- * @param quill
- * @param options
- */
 class Mention {
-	public static className = 'ql-mention-denotation'
+	private static className = 'ql-mention-denotation'
+	private static LoadingClassName = 'ql-mention-loading'
 
 	private quill!: Quill
 	private options!: MentionOptions
 
+	/** mention 组件 */
+	private mentionComponent!: Root | null
+	/** mention 容器 */
 	private container!: HTMLDivElement | null
-	private root!: Root | null
-	private mentionComponent!: React.ReactNode
 
-	private source!: Data[]
+	private handlerClickEvent = this.destroy.bind(this)
+	private handlerEnterEvent = this.handlerEnter.bind(this)
 
-	private isEnter: boolean = false
+	private data!: Data[] | null
 
 	constructor(quill: Quill, options: MentionOptions) {
 		this.quill = quill
-		this.options = { ...defaultOptions, ...options }
-
-		this.quill.on('text-change', this.handleTextChange.bind(this))
-
-		document.body.addEventListener('click', () => this.clearContainer())
-
-		this.quill.root.addEventListener('keydown', this.handleEnter.bind(this), true)
+		this.options = Object.assign({}, defaultOptions, options)
+		this.quill.on(Quill.events.TEXT_CHANGE, this.handlerTextChange.bind(this))
+		document.body.addEventListener('click', this.handlerClickEvent)
 	}
 
 	/**
-	 * 创建一个新节点并初始化其属性。
-	 */
-	createNode() {
-		const denotationChar = document.createElement('div')
-		denotationChar.className = Mention.className
-		denotationChar.tabIndex = 10
-
-		this.root = createRoot(denotationChar)
-		this.root.render(this.mentionComponent)
-
-		document.body.appendChild(denotationChar)
-
-		this.container = denotationChar
-		this.handleBounds()
-	}
-
-	/**
-	 * 处理文本更改事件。
+	 * 文本改变处理
 	 *
-	 * @param {Delta} delta -代表文本更改的增量
-	 * @return {Promise<void>} 一个在处理文本更改时解析的承诺
+	 * @param {Delta} delta
 	 */
-	async handleTextChange(delta: Delta) {
-		this.isEnter = true
+	async handlerTextChange(delta: Delta) {
+		// 如果已经存在 mention 组件，则移除
+		if (this.container) this.destroy()
 
-		// 如果不需要显示提及
-		if (this.options.visable === false) return
+		// 如果不是触发字符，直接返回
+		const char = delta.ops?.at(-1)?.insert as string
+		if (!this.options.targetChars.includes(char)) return
 
-		// 如果有上一次存留的 @
-		this.clearContainer()
+		this.createElement()
 
-		const char = delta.ops?.at(-1)?.insert
-		if (!char) return
-
-		// 获取触发提及的字符（在这里为 '@'）
-		const triggerChar = this.options.triggerChar ?? defaultOptions.triggerChar
-		if (!triggerChar.includes(char as string)) return
-
-		// 创建提及
-		this.createMentionNode()
-		// loading
-		this.createNode()
-
-		this.source = (this.options.source && (await this.options.source())) ?? []
-
-		if (this.container && this.root) {
-			// 创建提及
-			this.mentionComponent = this.createMentionNode(this.source)
-			this.root.render(this.mentionComponent)
-			this.isEnter = false
-
-			setTimeout(() => {
-				this.handleBounds()
-			}, 0)
+		// 判断 source 是否为 Promise
+		let sourceData: Data[] | null = null
+		if (isAsyncFunction(this.options.source)) {
+			sourceData = await this.options.source()
+		} else {
+			sourceData = this.options.source() as Data[]
 		}
+
+		this.data = sourceData
+		this.updateData(sourceData)
 	}
 
 	/**
-	 * 处理提及回车确认事件
+	 * 创建元素
 	 *
-	 * @param {string} text - 提及内容
-	 * @return {Promise<void>} 一个在处理文本更改时解析的承诺
+	 * @returns
 	 */
-	handleEnter(e: KeyboardEvent) {
-		if (e.key !== 'Enter') return
-
-		if (!this.isEnter) e.preventDefault()
-		else return
-
-		const mentionEl = this.container?.firstElementChild as HTMLDivElement
-		const activeIndex = Number(mentionEl?.dataset?.activeIndex) ?? 0
-
-		const item = this.source?.[activeIndex] ?? {
-			name: '全体成员',
-			id: 0
-		}
-		this.options.onSelect?.(item)
-
-		this.insert({ ...item, name: `@${item.name}` })
-		this.clearContainer()
-		this.isEnter = true
+	createElement() {
+		this.container = document.createElement('div')
+		this.container.classList.add(Mention.className, Mention.LoadingClassName)
+		this.container.textContent = 'Loading...'
+		this.quill.container.appendChild(this.container)
+		this.claculatePosition()
+		this.quill.root.addEventListener('keydown', this.handlerEnterEvent, true)
 	}
 
 	/**
-	 * 插入内容
+	 * 更新数据
+	 *
+	 * @param {Data[] | null} data
+	 */
+	updateData(data: Data[] | null) {
+		if (!this.container) return
+		this.mentionComponent = createRoot(this.container)
+		this.mentionComponent.render(
+			createElement(MentionComponent, {
+				data,
+				el: this.quill.root,
+				onSelect: this.onSelect.bind(this),
+				item: this.options.item
+			})
+		)
+		this.container.classList.remove(Mention.LoadingClassName)
+	}
+
+	/**
+	 * 选择选项
 	 *
 	 * @param {Data} data
 	 */
-	insert(data: Data) {
-		// 删除输入字符 @
-		// const text = this.quill.getText()
-		// const selection = this.quill.getSelection()
-		// if (!selection) return
-		// const cursorPos = selection.index
-		// const start = text.lastIndexOf(' ', cursorPos - 2) + 1
-		// console.log("start",start);
-		// this.quill.deleteText(start, 1)
-
-		// 插入提及
-		const range = this.quill.selection?.savedRange
-		if (!range || range.length != 0) return
-		const position = range.index
-		this.quill.insertEmbed(position, 'mention', data, Quill.sources.API)
-		this.quill.insertText(position + 1, ' ', Quill.sources.API)
-		this.quill.setSelection(position + 2, Quill.sources.API)
-		this.quill.deleteText(position - 1, 1)
+	onSelect(data: Data) {
+		this.insertElement(data)
+		this.destroy()
 	}
 
 	/**
-	 * 移除开始的 @
-	 *
+	 * 计算组件显示位置
 	 */
-	removeStart() {
-		const range = this.quill.selection?.savedRange
-		if (!range || range.length != 0) return
-		const position = range.index
-		this.quill.deleteText(position, 1)
-		this.quill.setSelection(position, Quill.sources.API)
-	}
+	claculatePosition() {
+		if (!this.container) return
 
-	/**
-	 * 获取光标所在位置
-	 *
-	 * @returns {Bounds}
-	 */
-	getBounds() {
 		// 获取光标所在位置
 		const selection = this.quill.getSelection()
 		if (!selection) return
 
 		// 获取光标位置的坐标
 		const bounds = this.quill.getBounds(selection.index)
-		if (!bounds) return null
-		return bounds
-	}
-
-	/**
-	 * 处理边界问题
-	 *
-	 * @param data
-	 */
-	handleBounds() {
-		if (!this.container) return
-
-		const bounds = this.getBounds()
 		if (!bounds) return
 
-		const containerRect = this.container.getBoundingClientRect()
-		const quillContainerRect = this.quill.container.getBoundingClientRect()
-
-		// 解决 loading 位置不对
-		const offsetHeight = this.container.offsetHeight < 10 ? 36 : this.container.offsetHeight
-
 		this.container.style.left = `${bounds.left}px`
-		this.container.style.top = `${quillContainerRect.top + bounds.top - offsetHeight - 8}px`
-		this.container.style.bottom = `auto`
+		this.container.style.top = `${bounds.top + bounds.height}px`
 
-		// 控制右边界
-		const width = document.body.clientWidth
-		if (containerRect.right > width) {
-			this.container.style.right = `5px`
-			this.container.style.left = `auto`
+		const mentionBounds = this.container.getBoundingClientRect()
+
+		const bodyHeight = document.body.clientHeight
+		const bodyWidth = document.body.clientWidth
+
+		// 触发底部边界
+		if (mentionBounds.top + mentionBounds.height > bodyHeight) {
+			// 如果当前元素的高度和 body 高度相差少于 100
+			if (bodyHeight - mentionBounds.height < 100) {
+				const itemEl = this.container.querySelector('.ql-mention-denotation-item') as HTMLDivElement
+				if (!itemEl) return
+				const height = itemEl.offsetHeight * 2
+				this.container.style.height = `${height}px`
+				this.container.style.top = `${bounds.top - height}px`
+			} else {
+				this.container.style.top = `${bounds.top - mentionBounds.height}px`
+			}
+		}
+
+		// 触发右侧边界
+		if (bounds.left + mentionBounds.width > bodyWidth) {
+			this.container.style.left = `${bounds.left - mentionBounds.width}px`
 		}
 	}
 
-	createMentionNode(data?: Data[]) {
-		this.mentionComponent = this.options.render
-			? this.options.render(data)
-			: createElement(MentionComponent, {
-					data: data ?? null,
-					el: this.quill.root,
-					onSelect: this.options.onSelect ?? defaultOptions.onSelect
-				})
-		return this.mentionComponent
+	/**
+	 * 确认操作
+	 *
+	 * @param {KeyboardEvent} e
+	 */
+	handlerEnter(e: KeyboardEvent) {
+		if (e.key === KeyboardType.ESCAPE) return this.destroy()
+		if (e.key !== KeyboardType.ENTER) return
+		e.preventDefault()
+		const mentionEl = this.container?.firstElementChild as HTMLDivElement
+		const activeIndex = Number(mentionEl?.dataset?.activeIndex) ?? 0
+		const data = this.data?.[activeIndex] ?? null
+		this.insertElement(data!)
 	}
 
-	clearContainer() {
+	/**
+	 * 插入提及
+	 *
+	 * @param {Data} data
+	 */
+	insertElement(data: Data) {
+		if (!data) return
+		const range = this.quill.selection?.savedRange
+		if (!range || range.length != 0) return
+		const position = range.index
+		this.quill.insertEmbed(position, 'mention', { ...data, name: `@${data.name}` }, Quill.sources.API)
+		this.quill.insertText(position + 1, ' ', Quill.sources.API)
+		this.quill.setSelection(position + 2, Quill.sources.API)
+		this.quill.deleteText(position - 1, 1)
+		this.options?.onSelect?.(data)
+	}
+
+	/**
+	 * 销毁
+	 *
+	 * @returns
+	 */
+	destroy() {
 		if (!this.container) return
-		this.quill.root.removeEventListener('keydown', this.handleEnter)
-		this.mentionComponent = null
 		this.container.remove()
+		this.mentionComponent?.unmount()
+		document.body.removeEventListener('click', this.handlerClickEvent)
+		this.quill.root.removeEventListener('keydown', this.handlerEnterEvent, true)
 		this.container = null
-		this.root?.unmount()
+		this.mentionComponent = null
 	}
 }
-
 
 Quill.register({ 'modules/mention': Mention })
 

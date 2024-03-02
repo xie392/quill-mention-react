@@ -6,11 +6,12 @@ interface MentionProps {
 	data: Data[] | null
 	el: HTMLDivElement | null
 	onSelect: (data: Data) => void
+	item?: (data: Data) => React.ReactNode
 }
 
 const MentionComponent: React.FC<MentionProps> = (props) => {
 	const [loading, setLoading] = useState<boolean>(true)
-	const [activeIndex, setActiveIndex] = useState<number>(-1)
+	const [activeIndex, setActiveIndex] = useState<number>(0)
 
 	const MentionRef = useRef<HTMLDivElement | null>(null)
 	const ItemsRef = useRef<HTMLDivElement[]>([])
@@ -26,14 +27,14 @@ const MentionComponent: React.FC<MentionProps> = (props) => {
 				case 'ArrowUp':
 					e.preventDefault()
 					setActiveIndex((prevIndex) => {
-						if (prevIndex === -1) return length
+						if (prevIndex === 0) return length
 						return prevIndex - 1
 					})
 					break
 				case 'ArrowDown':
 					e.preventDefault()
 					setActiveIndex((prevIndex) => {
-						if (prevIndex === length) return -1
+						if (prevIndex === length) return 0
 						return prevIndex + 1
 					})
 					break
@@ -61,7 +62,7 @@ const MentionComponent: React.FC<MentionProps> = (props) => {
 	}
 
 	return (
-		<div className="mention-popup py-2" ref={MentionRef} data-active-index={activeIndex}>
+		<div className="mention-popup" ref={MentionRef} data-active-index={activeIndex}>
 			{!props.data?.length ? (
 				<div className="text-center text-[0.9rem] text-gray-500">暂无数据</div>
 			) : (
@@ -70,13 +71,13 @@ const MentionComponent: React.FC<MentionProps> = (props) => {
 						<div
 							key={index}
 							className={clsx(
-								'mention-popup-item py-[6px] px-2',
-								index === activeIndex && 'bg-gray-200 text-[#184fff]'
+								'mention-popup-item py-[6px] px-2 cursor-pointer hover:bg-[#F3F4F6]',
+								index === activeIndex && 'bg-[#F3F4F6]'
 							)}
 							onClick={() => props.onSelect(item)}
 							ref={(el) => el && (ItemsRef.current[index] = el)}
 						>
-							{item.name}
+							{props.item ? props.item(item) : item.name}
 						</div>
 					))}
 				</>

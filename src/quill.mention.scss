@@ -1,0 +1,32 @@
+.ql-mention-denotation {
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9;
+    width: 160px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-radius: 5px;
+    position: absolute;
+
+    .ql-mention-denotation-item {
+        box-sizing: border-box;
+    }
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: #ddd;
+    }
+}
+
+.ql-mention-loading {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
