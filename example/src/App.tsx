@@ -3,7 +3,7 @@ import Quill from 'quill'
 import 'quill/dist/quill.core.css'
 import { Data } from 'src/type'
 import './App.scss'
-// import 'quill-mention-react'
+import 'quill-mention-react'
 // import '../../src/quill.mention'
 
 
