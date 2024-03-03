@@ -30,3 +30,30 @@
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
 }
+
+.mention-popup {
+    .mention-popup-empty {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #ddd;
+    }
+
+    .mention-popup-item {
+        cursor: pointer;
+        box-sizing: border-box;
+        padding: 6px 8px;
+
+        &:hover {
+            background: #F3F4F6;
+        }
+    }
+
+    .mention-popup-item-active {
+        background: #F3F4F6;
+    }
+
+    .mention-popup-loading {
+        padding: 6px 8px;
+        box-sizing: border-box;
+    }
+}

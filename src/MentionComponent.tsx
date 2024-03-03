@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import  { Data } from './type'
+import { Data } from './type'
 import clsx from 'clsx'
+import './quill.mention.scss'
 
 interface MentionProps {
 	data: Data[] | null
@@ -58,22 +59,19 @@ const MentionComponent: React.FC<MentionProps> = (props) => {
 	}, [activeIndex])
 
 	if (loading) {
-		return <div className="p-2">Loading...</div>
+		return <div className="mention-popup-loading">Loading...</div>
 	}
 
 	return (
 		<div className="mention-popup" ref={MentionRef} data-active-index={activeIndex}>
 			{!props.data?.length ? (
-				<div className="text-center text-[0.9rem] text-gray-500">暂无数据</div>
+				<div className="mention-popup-empty">暂无数据</div>
 			) : (
 				<>
 					{props.data?.map((item, index) => (
 						<div
 							key={index}
-							className={clsx(
-								'mention-popup-item py-[6px] px-2 cursor-pointer hover:bg-[#F3F4F6]',
-								index === activeIndex && 'bg-[#F3F4F6]'
-							)}
+							className={clsx('mention-popup-item', index === activeIndex && 'mention-popup-item-active')}
 							onClick={() => props.onSelect(item)}
 							ref={(el) => el && (ItemsRef.current[index] = el)}
 						>
