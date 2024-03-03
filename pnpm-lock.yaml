@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.0.0-rc.2
     version: 2.0.0-rc.2
   quill-mention-react:
-    specifier: ^0.0.4
-    version: 0.0.4(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
+    specifier: ^0.0.6
+    version: 0.0.6(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2439,8 +2439,8 @@ packages:
       lodash.isequal: 4.5.0
     dev: false
 
-  /quill-mention-react@0.0.3(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-eOIHWMTB5l0zN7MAbkvyJsF0OTrcLjxQqOaXKMTE+8BHXg1sFie3UxnB4qFiD0IR+dwEVuga2QnZn/zyKGr9kw==}
+  /quill-mention-react@0.0.6(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4):
+    resolution: {integrity: sha512-2AISIQ5cn8oZRjXbGiG4aaaFYd6GGtt+meC4GI9wVTIfHOL6nsgMrV6VML7871/dZoSxEb9Ox2grxPYI3vJUDA==}
     peerDependencies:
       quill: ^2.0.0-rc.2
       react: ^18.2.0
@@ -2448,20 +2448,6 @@ packages:
     dependencies:
       clsx: 2.1.0
       quill: 2.0.0-rc.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /quill-mention-react@0.0.4(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4):
-    resolution: {integrity: sha512-+pXt40J1JDLR5lWUGqvP2aWJB/dkHXml6El/rJVx2ZecSgUJzfUfS9vvt6W5W9tjGQSiOAxSWMmyfWhOR393LA==}
-    peerDependencies:
-      quill: ^2.0.0-rc.2
-      react: ^18.2.0
-      react-dom: ^18.2.0
-    dependencies:
-      clsx: 2.1.0
-      quill: 2.0.0-rc.2
-      quill-mention-react: 0.0.3(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       vite-plugin-css-injected-by-js: 3.4.0(vite@5.1.4)

@@ -6,7 +6,6 @@ import './App.scss'
 import 'quill-mention-react'
 // import '../../src/quill.mention'
 
-
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },
 	{ id: 2, name: '李四', image: 'https://picsum.photos/30' },
