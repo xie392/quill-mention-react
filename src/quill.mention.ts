@@ -31,12 +31,12 @@ class Mention {
 	private handlerEnterEvent = this.handlerEnter.bind(this)
 
 	private data!: Data[] | null
+	private timer: NodeJS.Timeout | null = null
 
 	constructor(quill: Quill, options: MentionOptions) {
 		this.quill = quill
 		this.options = Object.assign({}, defaultOptions, options)
 		this.quill.on(Quill.events.TEXT_CHANGE, this.handlerTextChange.bind(this))
-		document.body.addEventListener('click', this.handlerClickEvent)
 	}
 
 	/**
@@ -78,6 +78,7 @@ class Mention {
 		this.quill.container.appendChild(this.container)
 		this.claculatePosition()
 		this.quill.root.addEventListener('keydown', this.handlerEnterEvent, true)
+		document.body.addEventListener('click', this.handlerClickEvent)
 	}
 
 	/**
@@ -97,6 +98,10 @@ class Mention {
 			})
 		)
 		this.container.classList.remove(Mention.LoadingClassName)
+
+		requestAnimationFrame(() => {
+			this.timer = setTimeout(() => this.claculatePosition(), 0)
+		})
 	}
 
 	/**
@@ -128,20 +133,21 @@ class Mention {
 
 		const mentionBounds = this.container.getBoundingClientRect()
 
-		const bodyHeight = document.body.clientHeight
-		const bodyWidth = document.body.clientWidth
-
+		const bodyHeight = window.innerHeight
+		const bodyWidth = window.innerWidth
+		const mentionBoundsHeight = this.container.offsetHeight
+		
 		// 触发底部边界
-		if (mentionBounds.top + mentionBounds.height > bodyHeight) {
+		if (mentionBounds.top + mentionBoundsHeight > bodyHeight) {
 			// 如果当前元素的高度和 body 高度相差少于 100
-			if (bodyHeight - mentionBounds.height < 100) {
+			if (bodyHeight - mentionBoundsHeight < 100) {
 				const itemEl = this.container.querySelector('.ql-mention-denotation-item') as HTMLDivElement
 				if (!itemEl) return
 				const height = itemEl.offsetHeight * 2
 				this.container.style.height = `${height}px`
 				this.container.style.top = `${bounds.top - height}px`
 			} else {
-				this.container.style.top = `${bounds.top - mentionBounds.height}px`
+				this.container.style.top = `-${mentionBoundsHeight - bounds.top}px`
 			}
 		}
 
@@ -196,6 +202,7 @@ class Mention {
 		this.quill.root.removeEventListener('keydown', this.handlerEnterEvent, true)
 		this.container = null
 		this.mentionComponent = null
+		if (this.timer) clearTimeout(this.timer)
 	}
 }
 
