@@ -1,5 +1,5 @@
 import Quill from 'quill'
-import  { Data, MentionOptions } from './type'
+import { Data, MentionOptions } from './type'
 import { Delta } from 'quill/core'
 import { isAsyncFunction } from './shared/utils'
 import { Root, createRoot } from 'react-dom/client'

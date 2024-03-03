@@ -1,13 +1,9 @@
 import { useEffect, useRef } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.core.css'
-// import '../../src/quill.mention'
 import { Data } from 'src/type'
 import './App.scss'
-import Mention from 'quill-mention-react'
-import 'quill-mention-react/dist/style.css'
-
-Quill.register({ 'modules/mention': Mention })
+import '../../dist'
 
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },
@@ -121,7 +117,8 @@ const App = () => {
 						href="https://github.com/quill-mention/quill-mention/tree/master"
 					>
 						quill-mention
-					</a>，本插件仅供学习参考，如需使用到生产环境，建议按照自己需求自行修改。
+					</a>
+					，本插件仅供学习参考，如需使用到生产环境，建议按照自己需求自行修改。
 				</p>
 
 				<div className="mb-10">
