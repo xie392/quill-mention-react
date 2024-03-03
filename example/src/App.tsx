@@ -3,7 +3,7 @@ import Quill from 'quill'
 import 'quill/dist/quill.core.css'
 import { Data } from 'src/type'
 import './App.scss'
-import '../../dist'
+import 'quill-mention-react'
 
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },

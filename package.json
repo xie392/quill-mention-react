@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.0",
-    "quill-mention-react": "^0.0.3",
+    "quill-mention-react": "^0.0.4",
     "vite-plugin-css-injected-by-js": "^3.4.0"
   },
   "repository": "https://github.com/xie392/quill-mention-react.git",
