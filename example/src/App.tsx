@@ -4,7 +4,8 @@ import 'quill/dist/quill.core.css'
 import { Data } from 'src/type'
 import './App.scss'
 // import 'quill-mention-react'
-import '../../src/quill.mention'
+// import '../../src/quill.mention'
+
 
 const data = [
 	{ id: 1, name: '张三', image: 'https://picsum.photos/30' },
@@ -109,7 +110,6 @@ const App = () => {
 	return (
 		<>
 			<main className="max-w-[1000px] mx-auto py-10 px-4">
-				<div className='h-[30vh]'></div>
 				<h1 className="text-2xl font-bold mb-5">Quill Mention React</h1>
 				<p className="mb-10 text-sm">
 					输入"@"插入提及，参考&nbsp;
