@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.0.0-rc.2
     version: 2.0.0-rc.2
   quill-mention-react:
-    specifier: ^0.0.6
-    version: 0.0.6(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
+    specifier: ^0.0.7
+    version: 0.0.7(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2448,6 +2448,23 @@ packages:
     dependencies:
       clsx: 2.1.0
       quill: 2.0.0-rc.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      vite-plugin-css-injected-by-js: 3.4.0(vite@5.1.4)
+    transitivePeerDependencies:
+      - vite
+    dev: false
+
+  /quill-mention-react@0.0.7(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4):
+    resolution: {integrity: sha512-yfAMyotmN4NZ9IypAjPk1jJFm3C0ZRFQFZS61tMxGoP3GVwxXUzDPx3EbupnOzthKvjrKGYqZ9P4nwoerRVAlw==}
+    peerDependencies:
+      quill: ^2.0.0-rc.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      clsx: 2.1.0
+      quill: 2.0.0-rc.2
+      quill-mention-react: 0.0.6(quill@2.0.0-rc.2)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       vite-plugin-css-injected-by-js: 3.4.0(vite@5.1.4)
