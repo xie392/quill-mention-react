@@ -109,3 +109,6 @@ export interface MentionOptions {
 }
 ```
 
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/xie392/quill-mention-react.svg?background=%23ffffff&axis=%23333333&line=%236b63ff)](https://starchart.cc/xie392/quill-mention-react)
+
